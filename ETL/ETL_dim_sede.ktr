@@ -431,7 +431,7 @@
     <created_date>2023/12/15 12:54:49.816</created_date>
     <modified_user>-</modified_user>
     <modified_date>2023/12/15 12:54:49.816</modified_date>
-    <key_for_session_key/>
+    <key_for_session_key>H4sIAAAAAAAA/wMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
@@ -442,6 +442,57 @@
     <type>POSTGRESQL</type>
     <access>Native</access>
     <database>dim_bi</database>
+    <port>5432</port>
+    <username>postgres</username>
+    <password>Encrypted 2be98afc86aa7f2e4cb79ce108ec2fa89</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>5432</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>Transaccional</name>
+    <server>localhost</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>tran_bi</database>
     <port>5432</port>
     <username>postgres</username>
     <password>Encrypted 2be98afc86aa7f2e4cb79ce108ec2fa89</password>
@@ -504,7 +555,7 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Tabla_Sucursal</from>
+      <from>Tabla_Sede</from>
       <to>Añadir_Ultima_SK</to>
       <enabled>Y</enabled>
     </hop>
@@ -610,24 +661,43 @@
       <schema>public</schema>
       <table>dim_sede</table>
       <key>
-        <name>SK_Seq</name>
-        <field>SK_Seq</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <key>
-        <name>SK_Calculada</name>
-        <field>SK_Calculada</field>
+        <name>cod_sede</name>
+        <field>cod_sede</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
-        <name>SK_Seq</name>
-        <rename>SK_Seq</rename>
+        <name>cod_pais</name>
+        <rename>cod_pais</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>SK_Calculada</name>
+        <name>nb_pais</name>
+        <rename>nb_pais</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>cod_ciudad</name>
+        <rename>cod_ciudad</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>nb_ciudad</name>
+        <rename>nb_ciudad</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>cod_sede</name>
+        <rename>cod_sede</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>nb_sede</name>
+        <rename>nb_sede</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>sk_sede</name>
         <rename>SK_Calculada</rename>
         <update>Y</update>
       </value>
@@ -682,7 +752,7 @@
     </GUI>
   </step>
   <step>
-    <name>Tabla_Sucursal</name>
+    <name>Tabla_Sede</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -692,10 +762,9 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection/>
-    <sql>SELECT S.idsucursal, P.idpais, P.nombre as nombrepais, E.idestado, E.nombre as nombreestado, C.idciudad, C.nombre as nombreciudad, Z.idzona , Z.nombre as nombrezona
-FROM sucursal S, pais P, estado E, ciudad C, zona Z
-WHERE S.idzona = Z.idzona AND Z.idciudad = C.idciudad AND C.idestado = E.idestado AND E.idpais = P.idpais</sql>
+    <connection>Transaccional</connection>
+    <sql>SELECT PA.cod_pais, PA.nb_pais, CD.cod_ciudad, CD.nb_ciudad, SE.cod_sede, SE.nb_sede FROM pais AS PA, ciudad AS CD, sede AS SE 
+WHERE SE.cod_ciudad = CD.cod_ciudad AND CD.cod_pais = PA.cod_pais</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -706,172 +775,11 @@ WHERE S.idzona = Z.idzona AND Z.idciudad = C.idciudad AND C.idestado = E.idestad
       <value-meta>
         <type>Integer</type>
         <storagetype>normal</storagetype>
-        <name>idsucursal</name>
-        <length>6</length>
-        <precision>0</precision>
-        <origin>Tabla_Sucursal</origin>
-        <comments>idsucursal</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_VE</date_format_locale>
-        <date_format_timezone>America/Caracas</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>idpais</name>
-        <length>3</length>
-        <precision>0</precision>
-        <origin>Tabla_Sucursal</origin>
-        <comments>idpais</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_VE</date_format_locale>
-        <date_format_timezone>America/Caracas</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>nombrepais</name>
-        <length>30</length>
-        <precision>-1</precision>
-        <origin>Tabla_Sucursal</origin>
-        <comments>nombrepais</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_VE</date_format_locale>
-        <date_format_timezone>America/Caracas</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>idestado</name>
-        <length>6</length>
-        <precision>0</precision>
-        <origin>Tabla_Sucursal</origin>
-        <comments>idestado</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_VE</date_format_locale>
-        <date_format_timezone>America/Caracas</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>nombreestado</name>
-        <length>30</length>
-        <precision>-1</precision>
-        <origin>Tabla_Sucursal</origin>
-        <comments>nombreestado</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_VE</date_format_locale>
-        <date_format_timezone>America/Caracas</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>idciudad</name>
-        <length>7</length>
-        <precision>0</precision>
-        <origin>Tabla_Sucursal</origin>
-        <comments>idciudad</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_VE</date_format_locale>
-        <date_format_timezone>America/Caracas</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>nombreciudad</name>
-        <length>30</length>
-        <precision>-1</precision>
-        <origin>Tabla_Sucursal</origin>
-        <comments>nombreciudad</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_VE</date_format_locale>
-        <date_format_timezone>America/Caracas</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>idzona</name>
+        <name>cod_pais</name>
         <length>9</length>
         <precision>0</precision>
         <origin>Tabla_Sucursal</origin>
-        <comments>idzona</comments>
+        <comments>cod_pais</comments>
         <conversion_Mask>####0;-####0</conversion_Mask>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -890,11 +798,103 @@ WHERE S.idzona = Z.idzona AND Z.idciudad = C.idciudad AND C.idestado = E.idestad
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>nombrezona</name>
-        <length>30</length>
+        <name>nb_pais</name>
+        <length>50</length>
         <precision>-1</precision>
         <origin>Tabla_Sucursal</origin>
-        <comments>nombrezona</comments>
+        <comments>nb_pais</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_VE</date_format_locale>
+        <date_format_timezone>America/Caracas</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>cod_ciudad</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>Tabla_Sucursal</origin>
+        <comments>cod_ciudad</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_VE</date_format_locale>
+        <date_format_timezone>America/Caracas</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>nb_ciudad</name>
+        <length>50</length>
+        <precision>-1</precision>
+        <origin>Tabla_Sucursal</origin>
+        <comments>nb_ciudad</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_VE</date_format_locale>
+        <date_format_timezone>America/Caracas</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>cod_sede</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>Tabla_Sucursal</origin>
+        <comments>cod_sede</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_VE</date_format_locale>
+        <date_format_timezone>America/Caracas</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>nb_sede</name>
+        <length>50</length>
+        <precision>-1</precision>
+        <origin>Tabla_Sucursal</origin>
+        <comments>nb_sede</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -936,15 +936,39 @@ WHERE S.idzona = Z.idzona AND Z.idciudad = C.idciudad AND C.idestado = E.idestad
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection/>
-    <sql>SELECT COALESCE(MAX(sk_dim_sucursal), 0) AS ultima_SK FROM dim_sucursal;</sql>
+    <connection>dimensional</connection>
+    <sql>SELECT COALESCE(MAX(sk_sede), 0) AS ultima_SK FROM dim_sede;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
     <cached_row_meta_active>N</cached_row_meta_active>
-    <row-meta/>
+    <row-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>ultima_sk</name>
+        <length>-1</length>
+        <precision>-1</precision>
+        <origin>Ultima_SK</origin>
+        <comments>ultima_sk</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_VE</date_format_locale>
+        <date_format_timezone>America/Caracas</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+    </row-meta>
     <attributes/>
     <cluster_schema/>
     <remotesteps>

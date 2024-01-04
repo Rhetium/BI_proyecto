@@ -437,57 +437,6 @@
   <notepads>
   </notepads>
   <connection>
-    <name>DB_proyecto1</name>
-    <server>localhost</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>proyecto1_Supermercado</database>
-    <port>5432</port>
-    <username>postgres</username>
-    <password>Encrypted 2be98afc86aa7f2e4cb79ce108ec2fa89</password>
-    <servername/>
-    <data_tablespace/>
-    <index_tablespace/>
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>5432</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
-  <connection>
     <name>dimensional</name>
     <server>localhost</server>
     <type>POSTGRESQL</type>
@@ -538,6 +487,57 @@
       </attribute>
     </attributes>
   </connection>
+  <connection>
+    <name>transaccional</name>
+    <server>localhost</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>tran_bi</database>
+    <port>5432</port>
+    <username>postgres</username>
+    <password>Encrypted 2be98afc86aa7f2e4cb79ce108ec2fa89</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>5432</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <order>
     <hop>
       <from>ExtraerSK_evento</from>
@@ -547,11 +547,6 @@
     <hop>
       <from>ExtraerSK_tipo_stand</from>
       <to>ExtraerSK_cliente</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Limpiar_Tabla</from>
-      <to>Insert/Update_fact_alquiler</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -570,13 +565,23 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Tabla_Compras</from>
+      <from>Tabla_Contrato</from>
       <to>ExtraerSK_evento</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Limpiar_Tabla</from>
+      <to>Calculator</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Calculator</from>
+      <to>Insert/Update_fact_alquiler</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>ExtraerSK_tipo_stand</name>
+    <name>ExtraerSK_categoria</name>
     <type>DBLookup</type>
     <description/>
     <distribute>Y</distribute>
@@ -592,25 +597,19 @@
     <cache_size>0</cache_size>
     <lookup>
       <schema>public</schema>
-      <table>dim_tipo_stand</table>
+      <table>dim_categoria</table>
       <orderby/>
       <fail_on_multiple>N</fail_on_multiple>
       <eat_row_on_failure>Y</eat_row_on_failure>
       <key>
-        <name>codigobarras</name>
-        <field>codbarras</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <key>
-        <name>idlote</name>
-        <field>idlote</field>
+        <name>cod_sub_categoria</name>
+        <field>cod_subcategoria</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
-        <name>sk_dim_producto</name>
-        <rename>sk_dim_producto</rename>
+        <name>sk_categoria</name>
+        <rename>sk_categoria</rename>
         <default/>
         <type>None</type>
       </value>
@@ -624,55 +623,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
-      <yloc>208</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>ExtraerSK_evento</name>
-    <type>DBLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>dimensional</connection>
-    <cache>N</cache>
-    <cache_load_all>N</cache_load_all>
-    <cache_size>0</cache_size>
-    <lookup>
-      <schema>public</schema>
-      <table>dim_evento</table>
-      <orderby/>
-      <fail_on_multiple>N</fail_on_multiple>
-      <eat_row_on_failure>Y</eat_row_on_failure>
-      <key>
-        <name>idproveedor</name>
-        <field>idproveedor</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>sk_dim_proveedor</name>
-        <rename>sk_dim_proveedor</rename>
-        <default/>
-        <type>None</type>
-      </value>
-    </lookup>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>512</xloc>
+      <xloc>896</xloc>
       <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
@@ -699,14 +650,14 @@
       <fail_on_multiple>N</fail_on_multiple>
       <eat_row_on_failure>Y</eat_row_on_failure>
       <key>
-        <name>idsucursal</name>
-        <field>idsucursal</field>
+        <name>cod_cliente</name>
+        <field>cod_cliente</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
-        <name>sk_dim_sucursal</name>
-        <rename>sk_dim_sucursal</rename>
+        <name>sk_cliente</name>
+        <rename>sk_cliente</rename>
         <default/>
         <type>None</type>
       </value>
@@ -721,6 +672,54 @@
     </remotesteps>
     <GUI>
       <xloc>768</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>ExtraerSK_evento</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>dimensional</connection>
+    <cache>N</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema>public</schema>
+      <table>dim_evento</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>Y</eat_row_on_failure>
+      <key>
+        <name>cod_evento</name>
+        <field>cod_evento</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>sk_evento</name>
+        <rename>sk_evento</rename>
+        <default/>
+        <type>None</type>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>512</xloc>
       <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
@@ -747,14 +746,14 @@
       <fail_on_multiple>N</fail_on_multiple>
       <eat_row_on_failure>Y</eat_row_on_failure>
       <key>
-        <name>fechacompra</name>
+        <name>fecha_alquiler</name>
         <field>fecha</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
         <name>sk_tiempo</name>
-        <rename>SK_Tiempo_Compra</rename>
+        <rename>sk_fecha_contrato</rename>
         <default/>
         <type>Integer</type>
       </value>
@@ -770,6 +769,54 @@
     <GUI>
       <xloc>896</xloc>
       <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>ExtraerSK_tipo_stand</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>dimensional</connection>
+    <cache>N</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema>public</schema>
+      <table>dim_tipo_stand</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>Y</eat_row_on_failure>
+      <key>
+        <name>cod_tipo_stand</name>
+        <field>cod_tipo_stand</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>sk_tipo_stand</name>
+        <rename>sk_tipo_stand</rename>
+        <default/>
+        <type>None</type>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>656</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -791,49 +838,78 @@
       <schema>public</schema>
       <table>fact_alquiler</table>
       <key>
-        <name>iddetalle</name>
-        <field>codcompra</field>
+        <name>sk_evento</name>
+        <field>sk_evento</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>sk_tipo_stand</name>
+        <field>sk_tipo_stand</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>sk_fecha_contrato</name>
+        <field>sk_fec_alquiler</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>sk_cliente</name>
+        <field>sk_cliente</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>sk_categoria</name>
+        <field>sk_categoria</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
-        <name>codcompra</name>
-        <rename>iddetalle</rename>
-        <update>N</update>
+        <name>num_stand</name>
+        <rename>nro_stand</rename>
+        <update>Y</update>
       </value>
       <value>
-        <name>costototal</name>
-        <rename>total_compra</rename>
-        <update>N</update>
+        <name>mt2</name>
+        <rename>mts2</rename>
+        <update>Y</update>
       </value>
       <value>
-        <name>sk_dim_proveedor</name>
-        <rename>sk_dim_proveedor</rename>
-        <update>N</update>
+        <name>monto</name>
+        <rename>monto</rename>
+        <update>Y</update>
       </value>
       <value>
-        <name>sk_dim_producto</name>
-        <rename>sk_dim_producto</rename>
-        <update>N</update>
+        <name>sk_evento</name>
+        <rename>sk_evento</rename>
+        <update>Y</update>
       </value>
       <value>
-        <name>sk_dim_sucursal</name>
-        <rename>sk_dim_sucursal</rename>
-        <update>N</update>
+        <name>sk_tipo_stand</name>
+        <rename>sk_tipo_stand</rename>
+        <update>Y</update>
       </value>
       <value>
-        <name>sk_fecha_compra</name>
-        <rename>SK_Tiempo_Compra</rename>
-        <update>N</update>
+        <name>sk_cliente</name>
+        <rename>sk_cliente</rename>
+        <update>Y</update>
       </value>
       <value>
-        <name>sk_fecha_caducidad_producto</name>
-        <rename>SK_Tiempo_Caducidad</rename>
-        <update>N</update>
+        <name>sk_categoria</name>
+        <rename>sk_categoria</rename>
+        <update>Y</update>
       </value>
       <value>
-        <name>cantidad</name>
-        <rename>unidades</rename>
+        <name>sk_fecha_contrato</name>
+        <rename>sk_fecha_contrato</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>num_contrato</name>
+        <rename>cod_contrato</rename>
         <update>N</update>
       </value>
     </lookup>
@@ -846,7 +922,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
+      <xloc>400</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
@@ -865,28 +941,10 @@
     <fields>
       <select_unspecified>N</select_unspecified>
       <remove>
-        <name>fechacompra</name>
+        <name>cod_sub_categoria</name>
       </remove>
       <remove>
-        <name>dia_semana_compra</name>
-      </remove>
-      <remove>
-        <name>fechacaducidad</name>
-      </remove>
-      <remove>
-        <name>dia_semana_caducidad</name>
-      </remove>
-      <remove>
-        <name>idproveedor</name>
-      </remove>
-      <remove>
-        <name>idsucursal</name>
-      </remove>
-      <remove>
-        <name>codigobarras</name>
-      </remove>
-      <remove>
-        <name>idlote</name>
+        <name>cod_cliente</name>
       </remove>
     </fields>
     <attributes/>
@@ -904,7 +962,7 @@
     </GUI>
   </step>
   <step>
-    <name>Tabla_Compras</name>
+    <name>Tabla_Contrato</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -914,11 +972,8 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>DB_proyecto1</connection>
-    <sql>SELECT detCom.iddetalle, detCom.unidades, com.fechacompra, extract(dow from com.fechacompra) as Dia_Semana_Compra, lot.fechaCaducidad, extract(dow from lot.fechaCaducidad) as Dia_Semana_Caducidad, (detCom.unidades*lot.costoUnitario) AS total_compra, com.idproveedor, com.idsucursal, lot.codigobarras, lot.idLote
-	FROM compra com, lote lot, detalle_compra detCom
-		WHERE (com.idcompra = detCom.idcompra) AND (lot.idlote = detCom.idlote)
-			ORDER BY detCom.iddetalle;</sql>
+    <connection>transaccional</connection>
+    <sql>SELECT  * FROM contrato</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -927,16 +982,16 @@
     <cached_row_meta_active>N</cached_row_meta_active>
     <row-meta>
       <value-meta>
-        <type>BigNumber</type>
+        <type>Integer</type>
         <storagetype>normal</storagetype>
-        <name>iddetalle</name>
-        <length>-1</length>
-        <precision>-1</precision>
+        <name>nro_stand</name>
+        <length>9</length>
+        <precision>0</precision>
         <origin>Tabla_Compras</origin>
-        <comments>iddetalle</comments>
-        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
-        <decimal_symbol>.</decimal_symbol>
-        <grouping_symbol/>
+        <comments>nro_stand</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
         <currency_symbol/>
         <trim_type>none</trim_type>
         <case_insensitive>N</case_insensitive>
@@ -952,11 +1007,34 @@
       <value-meta>
         <type>Integer</type>
         <storagetype>normal</storagetype>
-        <name>unidades</name>
-        <length>6</length>
+        <name>cod_evento</name>
+        <length>9</length>
         <precision>0</precision>
         <origin>Tabla_Compras</origin>
-        <comments>unidades</comments>
+        <comments>cod_evento</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_VE</date_format_locale>
+        <date_format_timezone>America/Caracas</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>cod_tipo_stand</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>Tabla_Compras</origin>
+        <comments>cod_tipo_stand</comments>
         <conversion_Mask>####0;-####0</conversion_Mask>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -975,11 +1053,11 @@
       <value-meta>
         <type>Date</type>
         <storagetype>normal</storagetype>
-        <name>fechacompra</name>
+        <name>fecha_alquiler</name>
         <length>-1</length>
         <precision>-1</precision>
         <origin>Tabla_Compras</origin>
-        <comments>fechacompra</comments>
+        <comments>fecha_alquiler</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -996,37 +1074,14 @@
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
       <value-meta>
-        <type>BigNumber</type>
+        <type>Number</type>
         <storagetype>normal</storagetype>
-        <name>dia_semana_compra</name>
+        <name>mts2</name>
         <length>-1</length>
         <precision>-1</precision>
         <origin>Tabla_Compras</origin>
-        <comments>dia_semana_compra</comments>
-        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
-        <decimal_symbol>.</decimal_symbol>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_VE</date_format_locale>
-        <date_format_timezone>America/Caracas</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Date</type>
-        <storagetype>normal</storagetype>
-        <name>fechacaducidad</name>
-        <length>-1</length>
-        <precision>-1</precision>
-        <origin>Tabla_Compras</origin>
-        <comments>fechacaducidad</comments>
-        <conversion_Mask/>
+        <comments>mts2</comments>
+        <conversion_Mask>####0.0#########;-####0.0#########</conversion_Mask>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
         <currency_symbol/>
@@ -1042,39 +1097,16 @@
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
       <value-meta>
-        <type>BigNumber</type>
+        <type>Number</type>
         <storagetype>normal</storagetype>
-        <name>dia_semana_caducidad</name>
+        <name>monto</name>
         <length>-1</length>
         <precision>-1</precision>
         <origin>Tabla_Compras</origin>
-        <comments>dia_semana_caducidad</comments>
-        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
-        <decimal_symbol>.</decimal_symbol>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_VE</date_format_locale>
-        <date_format_timezone>America/Caracas</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>BigNumber</type>
-        <storagetype>normal</storagetype>
-        <name>total_compra</name>
-        <length>-1</length>
-        <precision>-1</precision>
-        <origin>Tabla_Compras</origin>
-        <comments>total_compra</comments>
-        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
-        <decimal_symbol>.</decimal_symbol>
-        <grouping_symbol/>
+        <comments>monto</comments>
+        <conversion_Mask>####0.0#########;-####0.0#########</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
         <currency_symbol/>
         <trim_type>none</trim_type>
         <case_insensitive>N</case_insensitive>
@@ -1090,11 +1122,11 @@
       <value-meta>
         <type>Integer</type>
         <storagetype>normal</storagetype>
-        <name>idproveedor</name>
-        <length>5</length>
+        <name>cod_sub_categoria</name>
+        <length>9</length>
         <precision>0</precision>
         <origin>Tabla_Compras</origin>
-        <comments>idproveedor</comments>
+        <comments>cod_sub_categoria</comments>
         <conversion_Mask>####0;-####0</conversion_Mask>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -1113,57 +1145,11 @@
       <value-meta>
         <type>Integer</type>
         <storagetype>normal</storagetype>
-        <name>idsucursal</name>
-        <length>6</length>
+        <name>cod_cliente</name>
+        <length>9</length>
         <precision>0</precision>
         <origin>Tabla_Compras</origin>
-        <comments>idsucursal</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_VE</date_format_locale>
-        <date_format_timezone>America/Caracas</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>codigobarras</name>
-        <length>-1</length>
-        <precision>-1</precision>
-        <origin>Tabla_Compras</origin>
-        <comments>codigobarras</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_VE</date_format_locale>
-        <date_format_timezone>America/Caracas</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>idlote</name>
-        <length>15</length>
-        <precision>0</precision>
-        <origin>Tabla_Compras</origin>
-        <comments>idlote</comments>
+        <comments>cod_cliente</comments>
         <conversion_Mask>####0;-####0</conversion_Mask>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -1195,8 +1181,8 @@
     </GUI>
   </step>
   <step>
-    <name>ExtraerSK_categoria</name>
-    <type>DBLookup</type>
+    <name>Calculator</name>
+    <type>Calculator</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1205,29 +1191,22 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>dimensional</connection>
-    <cache>N</cache>
-    <cache_load_all>N</cache_load_all>
-    <cache_size>0</cache_size>
-    <lookup>
-      <schema>public</schema>
-      <table>dim_categoria</table>
-      <orderby/>
-      <fail_on_multiple>N</fail_on_multiple>
-      <eat_row_on_failure>Y</eat_row_on_failure>
-      <key>
-        <name>idsucursal</name>
-        <field>idsucursal</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>sk_dim_sucursal</name>
-        <rename>sk_dim_sucursal</rename>
-        <default/>
-        <type>None</type>
-      </value>
-    </lookup>
+    <failIfNoFile>Y</failIfNoFile>
+    <calculation>
+      <field_name>cod_contrato</field_name>
+      <calc_type>ADD</calc_type>
+      <field_a>cod_evento</field_a>
+      <field_b>cod_tipo_stand</field_b>
+      <field_c/>
+      <value_type>None</value_type>
+      <value_length>-1</value_length>
+      <value_precision>-1</value_precision>
+      <remove>N</remove>
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <currency_symbol/>
+    </calculation>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1237,8 +1216,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>896</xloc>
-      <yloc>208</yloc>
+      <xloc>592</xloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
