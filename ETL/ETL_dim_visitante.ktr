@@ -694,7 +694,7 @@
       <value>
         <name>sk_visitante</name>
         <rename>SK_Calculada</rename>
-        <update>Y</update>
+        <update>N</update>
       </value>
     </lookup>
     <attributes/>

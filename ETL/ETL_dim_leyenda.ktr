@@ -669,7 +669,7 @@
       <value>
         <name>cod_leyenda</name>
         <rename>cod_leyenda_estrellas</rename>
-        <update>N</update>
+        <update>Y</update>
       </value>
       <value>
         <name>nb_leyenda</name>

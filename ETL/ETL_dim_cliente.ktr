@@ -546,7 +546,7 @@
     </hop>
     <hop>
       <from>Calcular_SK</from>
-      <to>Insert/Update_Dim_Categoria</to>
+      <to>Insert/Update_Dim_Cliente</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -644,7 +644,7 @@
     </GUI>
   </step>
   <step>
-    <name>Insert/Update_Dim_Categoria</name>
+    <name>Insert/Update_Dim_Cliente</name>
     <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
@@ -677,7 +677,7 @@
         <update>Y</update>
       </value>
       <value>
-        <name>ci_rif</name>
+        <name>cl_rif</name>
         <rename>ci_rif</rename>
         <update>Y</update>
       </value>
@@ -697,14 +697,9 @@
         <update>Y</update>
       </value>
       <value>
-        <name>ultima_sk</name>
-        <rename>ultima_sk</rename>
-        <update>Y</update>
-      </value>
-      <value>
         <name>sk_cliente</name>
         <rename>SK_Calculada</rename>
-        <update>Y</update>
+        <update>N</update>
       </value>
     </lookup>
     <attributes/>

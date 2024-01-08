@@ -676,19 +676,19 @@
         <update>Y</update>
       </value>
       <value>
-        <name>cod_sub_categoria</name>
+        <name>cod_subcategoria</name>
         <rename>cod_sub_categoria</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>nb_sub_categoria</name>
+        <name>nb_subcategoria</name>
         <rename>nb_sub_categoria</rename>
         <update>Y</update>
       </value>
       <value>
         <name>sk_categoria</name>
         <rename>SK_Calculada</rename>
-        <update>Y</update>
+        <update>N</update>
       </value>
     </lookup>
     <attributes/>

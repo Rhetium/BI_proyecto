@@ -679,7 +679,7 @@
       <value>
         <name>sk_tipo_stand</name>
         <rename>SK_Calculada</rename>
-        <update>Y</update>
+        <update>N</update>
       </value>
     </lookup>
     <attributes/>

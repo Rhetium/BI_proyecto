@@ -545,11 +545,6 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Limpiar_Tabla</from>
-      <to>Insert/Update_fact_visita</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Tabla_entrada</from>
       <to>ExtraerSK_evento</to>
       <enabled>Y</enabled>
@@ -567,6 +562,16 @@
     <hop>
       <from>ExtraerSK_fec_entrada</from>
       <to>Limpiar_Tabla</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Limpiar_Tabla</from>
+      <to>Add constants</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Add constants</from>
+      <to>Insert/Update_fact_visita</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -826,22 +831,27 @@
       <value>
         <name>sk_evento</name>
         <rename>SK_evento</rename>
-        <update>Y</update>
+        <update>N</update>
       </value>
       <value>
         <name>sk_visitante</name>
         <rename>SK_visitante</rename>
-        <update>Y</update>
+        <update>N</update>
       </value>
       <value>
         <name>sk_leyenda</name>
         <rename>SK_leyenda</rename>
-        <update>Y</update>
+        <update>N</update>
       </value>
       <value>
         <name>sk_fec_entrada</name>
         <rename>SK_fecha</rename>
-        <update>Y</update>
+        <update>N</update>
+      </value>
+      <value>
+        <name>cantidad_visita</name>
+        <rename>cant</rename>
+        <update>N</update>
       </value>
     </lookup>
     <attributes/>
@@ -853,7 +863,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>288</xloc>
+      <xloc>192</xloc>
       <yloc>304</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1114,6 +1124,45 @@
     <GUI>
       <xloc>112</xloc>
       <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Add constants</name>
+    <type>Constant</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>cant</name>
+        <type>Integer</type>
+        <format>0000000000000</format>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>1</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>304</xloc>
+      <yloc>304</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

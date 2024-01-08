@@ -691,7 +691,7 @@
         <update>Y</update>
       </value>
       <value>
-        <name>mts2</name>
+        <name>mt2</name>
         <rename>mts2</rename>
         <update>Y</update>
       </value>
@@ -703,12 +703,12 @@
       <value>
         <name>sk_evento</name>
         <rename>sk_evento</rename>
-        <update>Y</update>
+        <update>N</update>
       </value>
       <value>
-        <name>sk_tipostand</name>
+        <name>sk_tipo_stand</name>
         <rename>sk_tipostand</rename>
-        <update>Y</update>
+        <update>N</update>
       </value>
     </lookup>
     <attributes/>
