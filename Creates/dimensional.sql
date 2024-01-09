@@ -18,7 +18,7 @@ CREATE TABLE dim_leyenda(
 CREATE TABLE dim_visitante(
     sk_visitante NUMERIC NOT NULL CONSTRAINT sk_dim_visitante PRIMARY KEY,
     cod_visitante NUMERIC NOT NULL,
-    cedula NUMERIC NOT NULL,
+    cedula CHARACTER VARYING(50) NOT NULL,
     nb_visitante CHARACTER VARYING(50) NOT NULL,
     sexo CHARACTER VARYING(12) NOT NULL,
     email CHARACTER VARYING(50) NOT NULL
@@ -29,8 +29,8 @@ CREATE TABLE dim_evento(
     cod_tipo_evento NUMERIC NOT NULL,
     nb_tipo_evento CHARACTER VARYING(50) NOT NULL,
     cod_evento NUMERIC NOT NULL,
-    nb_evento CHARACTER VARYING(50),
-    descripcion CHARACTER VARYING(50)
+    nb_evento CHARACTER VARYING(200),
+    descripcion CHARACTER VARYING(500)
 );
 
 CREATE TABLE dim_tipo_stand(
@@ -45,7 +45,7 @@ CREATE TABLE dim_cliente(
     cl_rif CHARACTER VARYING(12) NOT NULL,
     nb_cliente CHARACTER VARYING(50) NOT NULL,
     telefono CHARACTER VARYING(12) NOT NULL,
-    direccion CHARACTER VARYING(50) NOT NULL,
+    direccion CHARACTER VARYING(200) NOT NULL,
     email CHARACTER VARYING(50) NOT NULL
 );
 
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS public.fact_visita
     sk_fec_entrada numeric NOT NULL,
     sk_leyenda numeric NOT NULL,
     num_entrada numeric NOT NULL,
-    hora_entrada timestamp without time zone NOT NULL,
+    hora_entrada time without time zone NOT NULL,
     cantidad_visita numeric NOT NULL,
     calificacion character varying(2) COLLATE pg_catalog."default",
     recomienda_amigo character varying(50) COLLATE pg_catalog."default",

@@ -1,3 +1,5 @@
+-- CREATES
+
 CREATE TABLE pais(
     cod_pais INTEGER PRIMARY KEY,
     nb_pais VARCHAR(50) NOT NULL
@@ -28,7 +30,7 @@ CREATE TABLE evento(
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE NOT NULL,
     descripcion VARCHAR(500) NOT NULL,
-    email VARCHAR(200) NOT NULL,
+    email VARCHAR(200) NOT NULL UNIQUE,
     cod_sede INTEGER NOT NULL,
     cod_tipo_evento INTEGER NOT NULL,
     CONSTRAINT fk_sede FOREIGN KEY(cod_sede) REFERENCES sede(cod_sede),
@@ -64,10 +66,10 @@ CREATE TABLE subcategoria(
 CREATE TABLE cliente(
     cod_cliente INTEGER PRIMARY KEY,
     nb_cliente VARCHAR(50) NOT NULL,
-    ci_rif VARCHAR(50) NOT NULL,
-    telefono VARCHAR(50) NOT NULL,
+    ci_rif VARCHAR(50) NOT NULL UNIQUE,
+    telefono VARCHAR(50) NOT NULL UNIQUE,
     direccion VARCHAR(200) NOT NULL,
-    email VARCHAR(200) NOT NULL
+    email VARCHAR(200) NOT NULL UNIQUE
 );
 
 CREATE TABLE contrato(
@@ -102,7 +104,7 @@ CREATE TABLE entrada(
     nro_entrada INTEGER NOT NULL,
     cod_evento INTEGER NOT NULL,
     fecha_entrada DATE NOT NULL,
-    hora_entrada DATE NOT NULL,
+    hora_entrada timestamp without time zone NOT NULL,
     recomienda_amigo VARCHAR(30) NOT NULL CHECK(recomienda_amigo IN ('Recomienda', 'No recomienda')),
     calificacion INTEGER NOT NULL,
     cod_leyenda_estrellas INTEGER NOT NULL,
