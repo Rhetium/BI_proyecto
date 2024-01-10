@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS public.fact_visita
     num_entrada numeric NOT NULL,
     hora_entrada time without time zone NOT NULL,
     cantidad_visita numeric NOT NULL,
-    calificacion character varying(2) COLLATE pg_catalog."default",
+    calificacion numeric COLLATE pg_catalog."default",
     recomienda_amigo character varying(50) COLLATE pg_catalog."default",
     CONSTRAINT fact_visita_pkey PRIMARY KEY (sk_evento, sk_visitante, sk_fec_entrada, sk_leyenda, num_entrada),
     CONSTRAINT sk_dim_evento FOREIGN KEY (sk_evento)
